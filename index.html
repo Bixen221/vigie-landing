@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Vigie — Déposez votre DIPA en ligne</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Déposez votre Déclaration d'Importation de Produits Alimentaires en ligne, suivez sa vérification et recevez votre DIPA visé par email.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E2882; --sky:#C1E7FF; --desk:#F6F6F8; --paper:#FFFFFF;
+    --text-dark:#14151A; --text-mute:#5B5D6B; --amber:#E8A33D; --stamp:#F6130E;
+    --line:rgba(14,40,130,0.12);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--desk);color:var(--text-dark);font-family:'Inter',sans-serif;line-height:1.5;}
+  h1,h2,h3{font-family:'Fraunces',serif;margin:0;letter-spacing:-0.01em;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+  a{color:inherit;}
+
+  /* ---------- Nav ---------- */
+  nav.top{position:sticky;top:0;z-index:50;background:rgba(246,246,248,0.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  nav.top .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;}
+  .brand-mark{width:30px;height:30px;border-radius:8px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:15px;}
+  .nav-cta{background:var(--ink);color:var(--sky);font-weight:600;font-size:13.5px;padding:10px 18px;border-radius:9px;text-decoration:none;transition:background .15s ease,color .15s ease;}
+  .nav-cta:hover{background:var(--sky);color:var(--ink);}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:76px 0 60px;}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr 0.9fr;gap:56px;align-items:center;}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink);background:var(--sky);padding:7px 14px;border-radius:20px;margin-bottom:22px;}
+  .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--ink);}
+  .hero h1{font-size:clamp(34px,4.4vw,52px);font-weight:600;line-height:1.08;color:var(--text-dark);}
+  .hero h1 em{font-style:normal;color:var(--ink);}
+  .hero p.lede{font-size:17px;color:var(--text-mute);margin:22px 0 30px;max-width:44ch;}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+  .btn-primary{background:var(--ink);color:var(--sky);font-weight:600;font-size:14.5px;padding:15px 26px;border-radius:11px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:background .15s ease,color .15s ease,transform .1s ease;}
+  .btn-primary:hover{background:var(--sky);color:var(--ink);transform:translateY(-1px);}
+  .btn-ghost{font-weight:600;font-size:14.5px;color:var(--text-dark);text-decoration:none;padding:15px 6px;border-bottom:2px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--ink);}
+
+  /* ---------- Stamp scene (signature element) ---------- */
+  .stamp-scene{position:relative;height:340px;display:flex;align-items:center;justify-content:center;}
+  .doc{width:220px;height:288px;background:var(--paper);border-radius:6px;box-shadow:0 24px 60px rgba(14,40,130,0.14);position:relative;padding:26px 22px;}
+  .doc::before{content:'';position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 26px 26px 0;border-color:transparent var(--desk) transparent transparent;}
+  .doc .ln{height:8px;border-radius:4px;background:var(--line);margin-bottom:12px;}
+  .doc .ln.w1{width:88%;} .doc .ln.w2{width:65%;} .doc .ln.w3{width:76%;} .doc .ln.w4{width:52%;}
+  .doc .ln.gap{margin-top:24px;}
+  .stamp{
+    position:absolute; top:52%; left:52%; transform:translate(-50%,-50%) rotate(-10deg) scale(2.6); opacity:0;
+    width:168px; height:168px; border-radius:50%; border:4px solid var(--ink);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    color:var(--ink); font-family:'Fraunces',serif; font-weight:700; font-size:15px; line-height:1.25;
+    background:rgba(193,231,255,0.45);
+    animation: tamponner 0.5s 0.7s cubic-bezier(.15,1.6,.4,1) forwards;
+  }
+  .stamp span{display:block;}
+  .stamp .petit{font-family:'Inter',sans-serif;font-weight:600;font-size:10px;letter-spacing:0.12em;margin-top:4px;}
+  @keyframes tamponner{
+    0%{opacity:0; transform:translate(-50%,-50%) rotate(-10deg) scale(2.6);}
+    55%{opacity:1;}
+    100%{opacity:1; transform:translate(-50%,-50%) rotate(-10deg) scale(1);}
+  }
+  @media (prefers-reduced-motion: reduce){ .stamp{animation:none; opacity:1; transform:translate(-50%,-50%) rotate(-10deg) scale(1);} }
+
+  /* ---------- Steps ---------- */
+  section{padding:68px 0;}
+  .section-head{max-width:52ch;margin-bottom:44px;}
+  .section-head .eyebrow{margin-bottom:16px;}
+  .section-head h2{font-size:clamp(26px,3vw,34px);font-weight:600;}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--line);border-radius:16px;overflow:hidden;}
+  .step{background:var(--paper);padding:32px 28px;}
+  .step .num{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--ink);opacity:0.5;margin-bottom:18px;}
+  .step h3{font-size:19px;font-weight:600;margin-bottom:10px;}
+  .step p{color:var(--text-mute);font-size:14.5px;margin:0;}
+  .step .icon{width:42px;height:42px;border-radius:10px;background:var(--sky);color:var(--ink);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:19px;}
+
+  /* ---------- Benefits ---------- */
+  .benefits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .benefit{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:26px;}
+  .benefit .icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:16px;}
+  .benefit h3{font-size:16px;font-weight:600;margin-bottom:6px;}
+  .benefit p{color:var(--text-mute);font-size:13.5px;margin:0;}
+  .b-blue .icon{background:var(--sky);color:var(--ink);}
+  .b-amber .icon{background:#FBEBD2;color:#8A5E15;}
+  .b-red .icon{background:#FCE2E1;color:#C4100B;}
+
+  /* ---------- CTA band ---------- */
+  .cta-band{background:var(--ink);border-radius:22px;padding:56px 48px;text-align:center;color:#fff;}
+  .cta-band h2{color:#fff;font-size:clamp(24px,3vw,32px);margin-bottom:14px;}
+  .cta-band p{color:rgba(255,255,255,0.72);max-width:46ch;margin:0 auto 28px;font-size:15px;}
+  .cta-band .btn-primary{background:var(--sky);color:var(--ink);}
+  .cta-band .btn-primary:hover{background:#fff;}
+
+  footer{padding:36px 0 50px;text-align:center;font-size:12px;color:var(--text-mute);}
+  footer .credits{margin-top:6px;}
+
+  @media (max-width:860px){
+    .hero .wrap{grid-template-columns:1fr;gap:40px;}
+    .stamp-scene{height:260px;order:-1;}
+    .steps, .benefits-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <div class="brand"><span class="brand-mark">V</span> Vigie</div>
+    <a class="nav-cta" href="https://vigie-commercant.vercel.app/">Déposer ma déclaration</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Ministère du Commerce · DCSC</span>
+      <h1>Votre DIPA, déposée en ligne,<br><em>sans passer par le guichet.</em></h1>
+      <p class="lede">Déposez votre Déclaration d'Importation de Produits Alimentaires depuis votre téléphone ou votre ordinateur, suivez sa vérification en temps réel, et recevez votre document visé directement par email.</p>
+      <div class="cta-row">
+        <a class="btn-primary" href="https://vigie-commercant.vercel.app/">Déposer ma déclaration →</a>
+        <a class="btn-ghost" href="#etapes">Voir comment ça marche</a>
+      </div>
+    </div>
+    <div class="stamp-scene">
+      <div class="doc">
+        <div class="ln w1"></div>
+        <div class="ln w2"></div>
+        <div class="ln w3"></div>
+        <div class="ln gap w4"></div>
+        <div class="ln w1"></div>
+        <div class="ln w2"></div>
+      </div>
+      <div class="stamp"><span>VÉRIFIÉ</span><span class="petit">EN LIGNE</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="etapes">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Le parcours</span>
+      <h2>Trois étapes, du dépôt à la validation</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="icon">📝</div>
+        <div class="num">01</div>
+        <h3>Déposez votre DIPA</h3>
+        <p>Remplissez le formulaire en ligne, ou photographiez votre document rempli : les champs se pré-remplissent automatiquement.</p>
+      </div>
+      <div class="step">
+        <div class="icon">🔍</div>
+        <div class="num">02</div>
+        <h3>Vérification</h3>
+        <p>Un agent de la DCSC contrôle votre dossier, appuyé par un système qui croise vos informations avec les registres officiels.</p>
+      </div>
+      <div class="step">
+        <div class="icon">📩</div>
+        <div class="num">03</div>
+        <h3>Recevez votre DIPA visé</h3>
+        <p>Dès la validation, votre déclaration visée arrive directement dans votre boîte email — plus besoin de vous déplacer pour la récupérer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="avantages">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Pourquoi en ligne</span>
+      <h2>Ce que ça change pour vous</h2>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit b-blue">
+        <div class="icon">⚡</div>
+        <h3>Plus rapide</h3>
+        <p>Déposez en quelques minutes, sans file d'attente ni déplacement au guichet.</p>
+      </div>
+      <div class="benefit b-blue">
+        <div class="icon">🕐</div>
+        <h3>Disponible 24h/24</h3>
+        <p>Déposez votre déclaration à tout moment, même en dehors des heures d'ouverture.</p>
+      </div>
+      <div class="benefit b-amber">
+        <div class="icon">📍</div>
+        <h3>Suivi en temps réel</h3>
+        <p>Sachez exactement où en est votre dossier, sans avoir à relancer un service.</p>
+      </div>
+      <div class="benefit b-amber">
+        <div class="icon">📷</div>
+        <h3>Remplissage assisté</h3>
+        <p>Une photo de votre document suffit à pré-remplir les champs du formulaire.</p>
+      </div>
+      <div class="benefit b-red">
+        <div class="icon">🛡️</div>
+        <h3>Contrôles renforcés</h3>
+        <p>Un système de vérification croisée protège les déclarants sérieux contre la concurrence déloyale.</p>
+      </div>
+      <div class="benefit b-red">
+        <div class="icon">🆓</div>
+        <h3>Sans frais additionnels</h3>
+        <p>Le dépôt en ligne ne coûte rien de plus que la démarche habituelle.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta-band">
+      <h2>Prêt à déposer votre déclaration ?</h2>
+      <p>Le formulaire prend quelques minutes à remplir — par saisie manuelle ou par photo.</p>
+      <a class="btn-primary" href="https://vigie-commercant.vercel.app/">Déposer ma déclaration →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>Vigie — un service numérique de la Division de la Consommation et de la Sécurité des Consommateurs</div>
+    <div class="credits">Projet réalisé par Issa NIANG · Khadim SINE · Babacar L. ANATO</div>
+  </div>
+</footer>
+
+</body>
+</html>
