@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <style>
   :root{
     --ink:#0E2882; --sky:#C1E7FF; --desk:#F6F6F8; --paper:#FFFFFF;
@@ -90,12 +91,6 @@
   .b-red .icon{background:#FCE2E1;color:#C4100B;}
 
   /* ---------- CTA band ---------- */
-  .cta-band{background:var(--ink);border-radius:22px;padding:56px 48px;text-align:center;color:#fff;}
-  .cta-band h2{color:#fff;font-size:clamp(24px,3vw,32px);margin-bottom:14px;}
-  .cta-band p{color:rgba(255,255,255,0.72);max-width:46ch;margin:0 auto 28px;font-size:15px;}
-  .cta-band .btn-primary{background:var(--sky);color:var(--ink);}
-  .cta-band .btn-primary:hover{background:#fff;}
-
   footer{padding:36px 0 50px;text-align:center;font-size:12px;color:var(--text-mute);}
   footer .credits{margin-top:6px;}
 
@@ -104,6 +99,30 @@
     .stamp-scene{height:260px;order:-1;}
     .steps, .benefits-grid{grid-template-columns:1fr;}
   }
+
+  /* ---------- Formulaire de dépôt (intégré) ---------- */
+  #deposer .card{background:var(--paper);border-radius:14px;padding:32px;box-shadow:0 8px 24px rgba(14,40,130,0.08);border:1px solid var(--line);max-width:900px;margin:0 auto;}
+  #deposer .section-label{display:inline-block;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.1px;color:#fff;background:var(--ink);padding:7px 16px;border-radius:20px;margin:26px 0 16px;}
+  #deposer .section-label:first-of-type{margin-top:4px;}
+  #deposer .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  #deposer .field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+  #deposer .field label{font-family:'Inter',sans-serif;font-size:10.5px;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-mute);}
+  #deposer .field input, #deposer .field select{border:none;border-bottom:1.5px solid var(--line);background:transparent;padding:7px 2px;font-family:'Inter',sans-serif;font-size:14.5px;color:var(--text-dark);width:100%;}
+  #deposer .field input:focus, #deposer .field select:focus{outline:none;border-bottom-color:var(--ink);}
+  #deposer .req{color:var(--stamp);margin-left:2px;}
+  #deposer .error-msg{display:none;color:#C4100B;font-size:11px;margin-top:3px;font-family:'Inter',sans-serif;}
+  #deposer .field.error input, #deposer .field.error select{border-bottom-color:var(--stamp);border-bottom-width:2px;}
+  #deposer .field.error .error-msg{display:block;}
+  #deposer .form-btn{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.3px;border:none;padding:14px 28px;border-radius:11px;cursor:pointer;background:var(--ink);color:var(--sky);transition:background .15s ease,color .15s ease;}
+  #deposer .form-btn:hover{background:var(--sky);color:var(--ink);}
+  #deposer .form-btn:disabled{opacity:0.5;cursor:not-allowed;}
+  #deposer .confirmation{text-align:center;padding:30px 20px;}
+  #deposer .confirmation .icone{width:64px;height:64px;border-radius:50%;background:#E1F0E7;color:#1E7B45;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 18px;}
+  #deposer .confirmation h3{margin:0 0 8px;font-size:22px;}
+  #deposer .confirmation p{color:var(--text-mute);font-size:14px;font-family:'Inter',sans-serif;}
+  #deposer .confirmation .ref{font-family:monospace;font-size:13px;background:var(--desk);padding:8px 14px;border-radius:6px;display:inline-block;margin-top:12px;}
+  #deposer .helptext{font-family:'Inter',sans-serif;font-size:12.5px;color:var(--text-mute);margin-top:10px;line-height:1.5;}
+  @media (max-width:700px){#deposer .grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -111,7 +130,7 @@
 <nav class="top">
   <div class="wrap">
     <div class="brand"><span class="brand-mark">V</span> Vigie</div>
-    <a class="nav-cta" href="https://vigie-commercant.vercel.app/">Déposer ma déclaration</a>
+    <a class="nav-cta" href="#deposer">Déposer ma déclaration</a>
   </div>
 </nav>
 
@@ -122,7 +141,7 @@
       <h1>Votre DIPA, déposée en ligne,<br><em>sans passer par le guichet.</em></h1>
       <p class="lede">Déposez votre Déclaration d'Importation de Produits Alimentaires depuis votre téléphone ou votre ordinateur, suivez sa vérification en temps réel, et recevez votre document visé directement par email.</p>
       <div class="cta-row">
-        <a class="btn-primary" href="https://vigie-commercant.vercel.app/">Déposer ma déclaration →</a>
+        <a class="btn-primary" href="#deposer">Déposer ma déclaration →</a>
         <a class="btn-ghost" href="#etapes">Voir comment ça marche</a>
       </div>
     </div>
@@ -210,12 +229,91 @@
   </div>
 </section>
 
-<section>
+<section id="deposer">
   <div class="wrap">
-    <div class="cta-band">
-      <h2>Prêt à déposer votre déclaration ?</h2>
-      <p>Le formulaire prend quelques minutes à remplir — par saisie manuelle ou par photo.</p>
-      <a class="btn-primary" href="https://vigie-commercant.vercel.app/">Déposer ma déclaration →</a>
+    <div class="section-head">
+      <span class="eyebrow">Dépôt en ligne</span>
+      <h2>Déposez votre déclaration</h2>
+    </div>
+
+    <div class="card" id="cardPrincipale">
+      <div id="vueFormulaire">
+        <div id="formDeclaration">
+
+          <div style="background:var(--desk);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin-bottom:22px;">
+            <div class="field" style="margin-bottom:0;">
+              <label>Adresse email <span class="req">*</span></label>
+              <input type="email" id="emailContact" placeholder="vous@exemple.com" required>
+              <div class="error-msg"></div>
+            </div>
+            <div class="helptext" style="margin-top:8px;margin-bottom:0;">Votre DIPA visé vous sera envoyé à cette adresse une fois la vérification terminée.</div>
+          </div>
+
+          <div class="section-label">Importateur</div>
+          <div class="grid">
+            <div class="field"><label>Nom de l'entreprise importatrice</label><input type="text" id="nomEntreprise" required></div>
+            <div class="field"><label>NINEA</label><input type="text" id="ninea" required></div>
+            <div class="field"><label>R.C. (Registre de Commerce)</label><input type="text" id="rc" required></div>
+            <div class="field"><label>Carte Import/Export N°</label><input type="text" id="carteImpExp" required></div>
+            <div class="field"><label>Fournisseur</label><input type="text" id="fournisseur" required></div>
+            <div class="field"><label>Adresse — Dépôt</label><input type="text" id="adresseDepot"></div>
+            <div class="field"><label>Adresse — Magasin</label><input type="text" id="adresseMagasin"></div>
+            <div class="field"><label>Tel / Fax / Email</label><input type="text" id="contactImportateur"></div>
+          </div>
+
+          <div class="section-label">Transitaire &amp; agent</div>
+          <div class="grid">
+            <div class="field"><label>Société de transit</label><input type="text" id="societeTransit"></div>
+            <div class="field"><label>Nom de l'agent</label><input type="text" id="nomAgent"></div>
+            <div class="field"><label>N° agrément ou crédit</label><input type="text" id="numeroAgrement"></div>
+            <div class="field"><label>Date de l'agrément</label><input type="date" id="dateAgrement"></div>
+            <div class="field"><label>CI N°</label><input type="text" id="ciNumero"></div>
+            <div class="field"><label>Adresse (transitaire)</label><input type="text" id="adresseTransit"></div>
+            <div class="field"><label>Téléphone (transitaire)</label><input type="text" id="telTransit"></div>
+          </div>
+
+          <div class="section-label">Produit déclaré</div>
+          <div class="grid">
+            <div class="field">
+              <label>Nature du produit</label>
+              <select id="produit" required>
+                <option value="Riz">Riz</option>
+                <option value="Huile alimentaire">Huile alimentaire</option>
+                <option value="Lait en poudre">Lait en poudre</option>
+                <option value="Sucre">Sucre</option>
+                <option value="Poisson congelé">Poisson congelé</option>
+                <option value="Conserves">Conserves</option>
+              </select>
+            </div>
+            <div class="field"><label>Marque</label><input type="text" id="marque"></div>
+            <div class="field"><label>Poids total (kg)</label><input type="number" id="poids" min="0" required></div>
+            <div class="field"><label>Prix unitaire (FCFA/kg)</label><input type="number" id="prixUnitaire" min="0" required></div>
+            <div class="field"><label>Valeur totale (FCFA) — auto</label><input type="number" id="valeur" min="0" required></div>
+            <div class="field"><label>Pays d'origine</label>
+              <select id="paysOrigine"><option>Chine</option><option>France</option><option>Émirats Arabes Unis</option><option>Turquie</option><option>Nigeria</option><option>Maroc</option><option>Thaïlande</option></select>
+            </div>
+            <div class="field"><label>Pays de provenance</label>
+              <select id="paysProvenance"><option>Chine</option><option>France</option><option>Émirats Arabes Unis</option><option>Turquie</option><option>Nigeria</option><option>Maroc</option><option>Thaïlande</option></select>
+            </div>
+            <div class="field"><label>Date de fabrication</label><input type="date" id="dateFabrication" required></div>
+            <div class="field"><label>DLC / DLUO</label><input type="date" id="dateDLC" required></div>
+            <div class="field"><label>N° Phyto</label><input type="text" id="phytoNumero"></div>
+          </div>
+          <div class="helptext">La référence du document, la date de délivrance, la fin de validité et le visa DCSC sont générés automatiquement par le système après dépôt.</div>
+
+          <div style="margin-top:22px;">
+            <button type="button" class="form-btn" id="btnSoumettre">Soumettre ma déclaration</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="vueConfirmation" class="confirmation" style="display:none;">
+        <div class="icone">✓</div>
+        <h3>Déclaration soumise</h3>
+        <p>Votre déclaration a bien été transmise et est en attente de vérification par un agent de la DCSC.</p>
+        <div class="ref" id="refConfirmation"></div>
+        <div style="margin-top:24px;"><button type="button" class="form-btn" id="btnNouvelleDeclaration">Déposer une autre déclaration</button></div>
+      </div>
     </div>
   </div>
 </section>
@@ -227,5 +325,160 @@
   </div>
 </footer>
 
+<script>
+const SUPABASE_URL = 'https://tbplantqvvlsfzgegzee.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRicGxhbnRxdnZsc2Z6Z2VnemVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU1MTg3MjAsImV4cCI6MjEwMTA5NDcyMH0.IM57eUiTIDk_Jo5YW5mCvhghC82SXbNOvOZ-DrElpqI';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const sanitizers = {
+  ninea: v => v.replace(/[^0-9]/g,'').slice(0,10),
+  rc: v => v.replace(/[^A-Za-z0-9.]/g,'').toUpperCase(),
+  carteImpExp: v => v.replace(/[^A-Za-z0-9-]/g,'').toUpperCase(),
+  ciNumero: v => v.replace(/[^0-9]/g,'').slice(0,15),
+  telTransit: v => v.replace(/[^0-9]/g,'').slice(0,15),
+};
+Object.keys(sanitizers).forEach(id=>{
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.addEventListener('input', ()=>{ el.value = sanitizers[id](el.value); });
+});
+
+const champPoids = document.getElementById('poids');
+const champPrix = document.getElementById('prixUnitaire');
+const champValeur = document.getElementById('valeur');
+function calculerValeurTotale(){
+  const p = Number(champPoids.value), pr = Number(champPrix.value);
+  if(p > 0 && pr > 0) champValeur.value = Math.round(p * pr);
+}
+champPoids.addEventListener('input', calculerValeurTotale);
+champPrix.addEventListener('input', calculerValeurTotale);
+
+document.querySelectorAll('#formDeclaration .field').forEach(f=>{
+  const el = f.querySelector('[required]');
+  if(!el) return;
+  const label = f.querySelector('label');
+  if(label && !label.querySelector('.req')) label.insertAdjacentHTML('beforeend', ' <span class="req">*</span>');
+  if(!f.querySelector('.error-msg')) f.insertAdjacentHTML('beforeend', '<div class="error-msg">Champ obligatoire</div>');
+  el.addEventListener('input', ()=> f.classList.remove('error'));
+  el.addEventListener('change', ()=> f.classList.remove('error'));
+});
+
+function validerFormulaire(){
+  let valide = true;
+  let premierInvalide = null;
+  document.querySelectorAll('#formDeclaration [required]').forEach(el=>{
+    const field = el.closest('.field');
+    const vide = !el.value || !el.value.toString().trim();
+    if(vide){
+      valide = false;
+      field.classList.add('error');
+      const msg = field.querySelector('.error-msg');
+      if(msg) msg.textContent = 'Champ obligatoire';
+      if(!premierInvalide) premierInvalide = el;
+    } else {
+      field.classList.remove('error');
+    }
+  });
+
+  const emailEl = document.getElementById('emailContact');
+  const emailField = emailEl.closest('.field');
+  const emailValide = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim());
+  if(emailEl.value.trim() && !emailValide){
+    valide = false;
+    emailField.classList.add('error');
+    emailField.querySelector('.error-msg').textContent = 'Adresse email invalide';
+    if(!premierInvalide) premierInvalide = emailEl;
+  }
+
+  if(!valide && premierInvalide){
+    premierInvalide.focus();
+    premierInvalide.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+  return valide;
+}
+
+function genererReference(){
+  const annee = new Date().getFullYear();
+  const suffixe = String(Math.floor(10000 + Math.random()*89999));
+  return `DIPA-${annee}-${suffixe}`;
+}
+
+document.getElementById('btnSoumettre').addEventListener('click', async function(){
+  if(!validerFormulaire()) return;
+  const btn = this;
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours…';
+
+  const auj = new Date();
+  const fin = new Date(auj);
+  fin.setMonth(fin.getMonth() + 2);
+
+  const val = (id) => document.getElementById(id).value.trim();
+
+  const decl = {
+    reference: genererReference(),
+    ninea: val('ninea'),
+    rc: val('rc'),
+    carte_imp_exp: val('carteImpExp'),
+    fournisseur: val('fournisseur'),
+    adresse_depot: val('adresseDepot'),
+    adresse_magasin: val('adresseMagasin'),
+    contact_importateur: val('contactImportateur'),
+    societe_transit: val('societeTransit'),
+    nom_agent: val('nomAgent'),
+    numero_agrement: val('numeroAgrement'),
+    date_agrement: document.getElementById('dateAgrement').value || null,
+    ci_numero: val('ciNumero'),
+    adresse_transit: val('adresseTransit'),
+    tel_transit: val('telTransit'),
+    phyto_numero: val('phytoNumero'),
+    produit: document.getElementById('produit').value,
+    marque: val('marque'),
+    poids: Number(document.getElementById('poids').value),
+    prix_unitaire: Number(document.getElementById('prixUnitaire').value),
+    valeur: Number(document.getElementById('valeur').value),
+    pays_origine: document.getElementById('paysOrigine').value,
+    pays_provenance: document.getElementById('paysProvenance').value,
+    date_fabrication: document.getElementById('dateFabrication').value || null,
+    date_dlc: document.getElementById('dateDLC').value || null,
+    date_delivrance: auj.toISOString().slice(0,10),
+    fin_validite: fin.toISOString().slice(0,10),
+    visa_present: true,
+    statut: 'attente',
+    entite_id: val('nomEntreprise'),
+    email: val('emailContact')
+  };
+
+  try {
+    const { data, error } = await sb.from('declarations').insert(decl).select().single();
+    if(error) throw error;
+    afficherConfirmation(data.reference);
+  } catch(err){
+    alert("Une erreur est survenue lors de l'envoi. Vérifiez votre connexion et réessayez.\n\n" + (err.message || ''));
+    btn.disabled = false;
+    btn.textContent = 'Soumettre ma déclaration';
+  }
+});
+
+function afficherConfirmation(reference){
+  document.getElementById('vueFormulaire').style.display = 'none';
+  document.getElementById('refConfirmation').textContent = reference;
+  document.getElementById('vueConfirmation').style.display = '';
+  document.getElementById('vueConfirmation').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+document.getElementById('btnNouvelleDeclaration').addEventListener('click', ()=>{
+  document.querySelectorAll('#formDeclaration input, #formDeclaration select').forEach(el=>{
+    if(el.tagName === 'SELECT') el.selectedIndex = 0;
+    else el.value = '';
+  });
+  document.querySelectorAll('#formDeclaration .field.error').forEach(f=>f.classList.remove('error'));
+  const btn = document.getElementById('btnSoumettre');
+  btn.disabled = false;
+  btn.textContent = 'Soumettre ma déclaration';
+  document.getElementById('vueConfirmation').style.display = 'none';
+  document.getElementById('vueFormulaire').style.display = '';
+});
+</script>
 </body>
 </html>
