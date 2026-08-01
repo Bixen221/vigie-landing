@@ -97,7 +97,7 @@
 
   @media (max-width:860px){
     .hero .wrap{grid-template-columns:1fr;gap:40px;}
-    .stamp-scene{height:260px;order:-1;}
+    .stamp-scene{display:none;}
     .steps, .benefits-grid{grid-template-columns:1fr;}
   }
 
@@ -257,6 +257,8 @@
           <div class="wp-step" data-wp="2"><span class="wp-dot">2</span><span class="wp-label">Transitaire</span></div>
           <div class="wp-bar"></div>
           <div class="wp-step" data-wp="3"><span class="wp-dot">3</span><span class="wp-label">Produit</span></div>
+          <div class="wp-bar"></div>
+          <div class="wp-step" data-wp="4"><span class="wp-dot">4</span><span class="wp-label">Email</span></div>
         </div>
 
         <div id="formDeclaration">
@@ -325,17 +327,25 @@
             </div>
             <div class="helptext">La référence du document, la date de délivrance, la fin de validité et le visa DCSC sont générés automatiquement par le système après dépôt.</div>
 
-            <div style="background:var(--desk);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin:22px 0 0;">
+            <div style="margin-top:22px;display:flex;justify-content:space-between;align-items:center;">
+              <button type="button" class="form-btn form-btn-ghost" data-precedent="2">← Précédent</button>
+              <button type="button" class="form-btn" data-suivant="4">Suivant →</button>
+            </div>
+          </div>
+
+          <div class="wizard-step" data-step="4" style="display:none;">
+            <div class="section-label">Dernière étape</div>
+            <div style="background:var(--desk);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin-top:16px;">
               <div class="field" style="margin-bottom:0;">
                 <label>Adresse email <span class="req">*</span></label>
                 <input type="email" id="emailContact" placeholder="vous@exemple.com" required>
                 <div class="error-msg"></div>
               </div>
-              <div class="helptext" style="margin-top:8px;margin-bottom:0;">Dernière étape — votre DIPA visé vous sera envoyé à cette adresse une fois la vérification terminée.</div>
+              <div class="helptext" style="margin-top:8px;margin-bottom:0;">Votre DIPA visé vous sera envoyé à cette adresse une fois la vérification terminée.</div>
             </div>
 
             <div style="margin-top:22px;display:flex;justify-content:space-between;align-items:center;">
-              <button type="button" class="form-btn form-btn-ghost" data-precedent="2">← Précédent</button>
+              <button type="button" class="form-btn form-btn-ghost" data-precedent="3">← Précédent</button>
               <button type="button" class="form-btn" id="btnSoumettre">Soumettre ma déclaration</button>
             </div>
           </div>
@@ -389,6 +399,36 @@ function calculerValeurTotale(){
 champPoids.addEventListener('input', calculerValeurTotale);
 champPrix.addEventListener('input', calculerValeurTotale);
 
+const REGLES_FORMAT = [
+  {id:'ninea', test: v => /^[0-9]{9,10}$/.test(v), msg:'NINEA invalide — 9 à 10 chiffres attendus'},
+  {id:'rc', test: v => /^[A-Z]{2}\.[A-Z]{3}\.\d{4}\.[A-Z]\.\d{3,5}$/i.test(v), msg:'Format attendu : SN.DKR.2020.B.1234'},
+  {id:'carteImpExp', test: v => v.length >= 3, msg:'Numéro trop court'},
+  {id:'ciNumero', test: v => /^[0-9]{6,15}$/.test(v), msg:'CI N° invalide — chiffres uniquement (6 à 15)'},
+  {id:'telTransit', test: v => /^[0-9]{7,15}$/.test(v), msg:'Téléphone invalide — chiffres uniquement (7 à 15)'},
+  {id:'poids', test: v => Number(v) > 0, msg:'Doit être un nombre positif'},
+  {id:'prixUnitaire', test: v => Number(v) > 0, msg:'Doit être un nombre positif'},
+  {id:'valeur', test: v => Number(v) > 0, msg:'Doit être un nombre positif'},
+];
+
+function validerChampFormat(id){
+  const regle = REGLES_FORMAT.find(r=>r.id===id);
+  if(!regle) return;
+  const el = document.getElementById(id);
+  const field = el.closest('.field');
+  const errMsg = field.querySelector('.error-msg');
+  const valeur = el.value.toString().trim();
+  if(valeur && !regle.test(valeur)){
+    field.classList.add('error');
+    if(errMsg) errMsg.textContent = regle.msg;
+  } else if(valeur){
+    field.classList.remove('error');
+  }
+}
+REGLES_FORMAT.forEach(({id})=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('blur', ()=>validerChampFormat(id));
+});
+
 document.querySelectorAll('#formDeclaration .field').forEach(f=>{
   const el = f.querySelector('[required]');
   if(!el) return;
@@ -413,6 +453,19 @@ function validerEtape(container){
       if(!premierInvalide) premierInvalide = el;
     } else {
       field.classList.remove('error');
+    }
+  });
+
+  REGLES_FORMAT.forEach(({id, test, msg})=>{
+    const el = container.querySelector('#'+id);
+    if(!el) return;
+    const field = el.closest('.field');
+    if(el.value && el.value.toString().trim() && !test(el.value.toString().trim())){
+      valide = false;
+      field.classList.add('error');
+      const errMsg = field.querySelector('.error-msg');
+      if(errMsg) errMsg.textContent = msg;
+      if(!premierInvalide) premierInvalide = el;
     }
   });
 
@@ -463,7 +516,7 @@ function genererReference(){
 }
 
 document.getElementById('btnSoumettre').addEventListener('click', async function(){
-  if(!validerEtape(document.querySelector('.wizard-step[data-step="3"]'))) return;
+  if(!validerEtape(document.querySelector('.wizard-step[data-step="4"]'))) return;
   const btn = this;
   btn.disabled = true;
   btn.textContent = 'Envoi en cours…';
